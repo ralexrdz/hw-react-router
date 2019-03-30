@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 import {Switch, Route, Link} from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 import Home from "./components/Home";
 import About from "./components/About";
@@ -42,24 +44,22 @@ class App extends Component {
   }
 
   logout = () => {
+    toast(`Adios, ${this.state.loggedUser.user}` )
     this.setState({
       loggedUser: null
     })
   }
 
   login = (user, password) => {
-    console.log('user', user)
-    console.log('password', password)
     let dataUser = this.state.users.find(u => {
       return u.user === user
     })
     console.log(dataUser)
     if (dataUser) {
-
-      console.log('Si está registrado este usario')
+      
       if (password === dataUser.password) {
 
-        console.log('Login Exitoso')
+        toast.success(`Login Exitoso para ${dataUser.user}`)
         this.setState({
           loggedUser: {
             user: dataUser.user,
@@ -69,12 +69,12 @@ class App extends Component {
         
       } else {
 
-        console.log('Password incorrecto')
+        toast.error('Password incorrecto')
 
       }
 
     } else {
-      console.log("No está registado Usuario")
+      toast.error("No está registado Usuario")
     }
   }
 
@@ -94,6 +94,17 @@ class App extends Component {
   render() {
     return (
       <>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={2000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
         <header>
           <Link to="/">Home</Link>&nbsp;
           <Link to="/about">About</Link>&nbsp;
@@ -114,7 +125,12 @@ class App extends Component {
           <Route exact path="/contact" component={Contact}/>
           <Route exact path="/login" render={this.loginWithProps}/>
           <Route exact path="/logout" render={() => {
-            return <Logout loggedUser={this.state.loggedUser} onLogout={this.logout}/>
+            return (
+              <Logout 
+                loggedUser={this.state.loggedUser} 
+                onLogout={this.logout}
+              />
+            )
           }}/>
           <Route exact path="/perfil/:id" component={Perfil}/>
           <Route exact path="/mi-perfil" render={() => {
