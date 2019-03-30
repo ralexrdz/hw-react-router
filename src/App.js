@@ -10,6 +10,7 @@ import Contact from "./components/Contact";
 import Login from "./components/Login";
 import MiPerfil from "./components/MiPerfil";
 import Perfil from './components/Perfil';
+import Register from './components/Register';
 
 import logo from './logo.svg';
 
@@ -78,6 +79,27 @@ class App extends Component {
     }
   }
 
+  register = (user, password, cPassword, firstName) => {
+    console.log('user', user)
+    console.log('password', password)
+    console.log('cPassword', cPassword)
+    console.log('firstName', firstName)
+    
+    if (password !== cPassword) {
+      toast.error('Los passwords no coinciden')
+    } else {
+      let newUser = {
+        user,
+        password,
+        firstName
+      }
+      this.setState({
+        users: [...this.state.users, newUser]
+      })
+      toast.success(`Registro correcto del usuario ${user}`)
+    }
+  }
+
   constructPosts (arr) {
     return arr.map(post => {
       return <div className="post">
@@ -117,6 +139,7 @@ class App extends Component {
             <Link to="/logout">Logout</Link>
           }&nbsp;
           <Link to="/mi-perfil">Mi Perfil</Link>&nbsp;
+          <Link to="/register">Registro</Link>&nbsp;
         </header>
         {/* <Login onLogin={this.login} /> */}
         <Switch>
@@ -135,6 +158,9 @@ class App extends Component {
           <Route exact path="/perfil/:id" component={Perfil}/>
           <Route exact path="/mi-perfil" render={() => {
             return <MiPerfil loggedUser={this.state.loggedUser}/>
+          }}/>
+          <Route exact path="/register" render={() => {
+            return <Register onRegister={this.register}/>
           }}/>
           {/* /perfil/1  o /perfil/2 */}
         </Switch>
